@@ -23,7 +23,7 @@ const isConfigValid = !!firebaseConfig.apiKey;
 // Initialize Firebase (Singleton pattern)
 const app = getApps().length > 0 
   ? getApp() 
-  : (isConfigValid ? initializeApp(firebaseConfig) : null);
+  : (isConfigValid ? initializeApp(firebaseConfig) : undefined);
 
 const auth = app ? getAuth(app) : ({} as any);
 

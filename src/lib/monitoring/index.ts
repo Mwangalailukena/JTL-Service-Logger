@@ -5,7 +5,7 @@ import { getPerformance } from "firebase/performance";
 import { app } from "@/lib/firebase";
 
 export const initMonitoring = async () => {
-  if (typeof window !== "undefined") {
+  if (typeof window !== "undefined" && app) {
     // 1. Initialize Firebase Performance Monitoring
     const perf = getPerformance(app);
 
