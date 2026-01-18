@@ -13,6 +13,10 @@ export const metadata: Metadata = {
   title: "Jeotronix Service Portal",
   description: "Internal ICT and Solar service logging app",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/icons/jeotonixlogo.png",
+    apple: "/icons/jeotonixlogo.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

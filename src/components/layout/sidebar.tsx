@@ -44,8 +44,8 @@ export function Sidebar({ isCollapsed }: SidebarProps) {
         "flex h-16 items-center gap-2 px-6 border-b transition-all",
         isCollapsed ? "justify-center px-0" : ""
       )}>
-        <div className="flex h-8 w-8 min-w-[32px] items-center justify-center rounded-lg bg-blue-600 text-white shadow-lg shadow-blue-100">
-          <Zap size={18} fill="currentColor" />
+        <div className="flex h-10 w-10 min-w-[40px] items-center justify-center rounded-lg overflow-hidden bg-white">
+          <img src="/icons/jeotonixlogo.png" alt="Jeotronix" className="h-full w-full object-contain" />
         </div>
         {!isCollapsed && (
           <span className="text-lg font-black tracking-tighter text-slate-900 animate-in fade-in duration-500">

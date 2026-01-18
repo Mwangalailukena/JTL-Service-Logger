@@ -37,8 +37,8 @@ export default function LoginPage() {
       <div className="w-full max-w-[420px] space-y-8">
         {/* Branding Area */}
         <div className="text-center space-y-4">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-2xl shadow-slate-200">
-            <Zap size={32} fill="currentColor" />
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-white text-slate-900 shadow-2xl shadow-slate-200 overflow-hidden">
+            <img src="/icons/jeotonixlogo.png" alt="Jeotronix" className="h-full w-full object-contain p-2" />
           </div>
           <div>
             <h1 className="text-3xl font-black tracking-tighter text-slate-900">Jeotronix Portal</h1>
