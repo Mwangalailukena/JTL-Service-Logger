@@ -32,62 +32,74 @@ export interface LocalServiceLog {
   };
 }
   
-  export interface LocalClient {
+export interface LocalClient {
     id?: string;
     firebaseId: string;
     name: string;
     type: 'corporate' | 'residential' | 'gov';
     location: string;
     contactPerson: string;
-  }
-  
-  export interface SyncQueueItem {
+}
+
+export interface SyncQueueItem {
     id?: number;
     collection: string;
     docId?: string;
     operation: 'create' | 'update' | 'delete';
     data: any;
     timestamp: number;
-  }
-  
-  export interface LocalArticle {
+}
+
+export interface LocalArticle {
     id?: string;
     firebaseId: string;
     title: string;
     category: 'ict' | 'solar' | 'general';
     content: string; // Markdown
     tags: string[];
+    version: number;
     lastUpdated: number;
+    deletedAt?: number | null; // For soft deletes
     isPinned: number; // 0 or 1 for indexing
-  }
-  
-  export interface LocalAttachment {
-    id: string; // firebase storage path
+    isCritical?: number; // 0 or 1 - Critical articles auto-download attachments
+}
+
+export interface LocalAttachment {
+    id: string; // firebase storage path or local temp id
     articleId: string;
     name: string;
-      size: number;
-      type: string;
-      localUrl?: string; // Blob URL if cached
-      blob?: Blob; // Actual file data for offline storage
-      isDownloaded: number; 
-    }
-    
-    export class JeotronixDB extends Dexie {    serviceLogs!: Table<LocalServiceLog>;
+    size: number;
+    type: string;
+    localUrl?: string; // Blob URL if cached
+    blob?: Blob; // Actual file data for offline storage
+    isDownloaded: number; 
+    needsUpload?: number; // 1 if pending upload to Firebase Storage
+}
+
+export interface SearchIndexEntry {
+    word: string;
+    refs: { id: string; score: number }[]; // Article IDs and their relevance score
+}
+
+export class JeotronixDB extends Dexie {    
+    serviceLogs!: Table<LocalServiceLog>;
     clients!: Table<LocalClient>;
     syncQueue!: Table<SyncQueueItem>;
     articles!: Table<LocalArticle>;
     attachments!: Table<LocalAttachment>;
-  
+    searchIndex!: Table<SearchIndexEntry>;
+
     constructor() {
       super('JeotronixDB');
-      this.version(5).stores({
+      this.version(9).stores({
         serviceLogs: '++id, firebaseId, clientId, technicianId, status, syncStatus, serviceDate, jobType',
         clients: '++id, firebaseId, name, type',
         syncQueue: '++id, collection, operation, timestamp',
-        articles: '++id, firebaseId, title, category, *tags, isPinned, lastUpdated',
-        attachments: 'id, articleId, isDownloaded'
+        articles: '++id, firebaseId, title, category, *tags, isPinned, isCritical, lastUpdated, deletedAt',
+        attachments: 'id, articleId, isDownloaded, needsUpload',
+        searchIndex: 'word'
       });
     }
-  }
-  
-  export const db = new JeotronixDB();
+}
+
+export const db = new JeotronixDB();

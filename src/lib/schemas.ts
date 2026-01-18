@@ -28,4 +28,19 @@ export const serviceLogSchema = z.object({
   photos: z.array(z.string()).optional(),
 });
 
+export const kbArticleSchema = z.object({
+  title: z.string().min(5, "Title must be at least 5 characters"),
+  category: z.enum(["ict", "solar", "general"]),
+  content: z.string().min(20, "Content is too short"),
+  tags: z.array(z.string()).default([]),
+  version: z.number().int().default(1),
+  attachments: z.array(z.object({
+    id: z.string(), // Storage path
+    name: z.string(),
+    size: z.number(),
+    type: z.string(),
+  })).optional(),
+});
+
 export type ServiceLogFormValues = z.infer<typeof serviceLogSchema>;
+export type KBArticle = z.infer<typeof kbArticleSchema>;

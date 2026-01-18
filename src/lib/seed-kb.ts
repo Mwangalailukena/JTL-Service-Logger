@@ -12,6 +12,8 @@ export async function seedKB() {
       category: "solar",
       content: "## Configuration Steps\n\n1. Connect VE.Direct cable.\n2. Open VictronConnect App.\n3. Select your device...",
       tags: ["victron", "inverter", "setup"],
+      version: 1,
+      deletedAt: null,
       lastUpdated: Date.now(),
       isPinned: 0,
     },
@@ -21,6 +23,8 @@ export async function seedKB() {
       category: "ict",
       content: "## Alignment Best Practices\n\nEnsure clear line of sight. Use the alignment tool in the dashboard...",
       tags: ["ubiquiti", "wireless", "p2p"],
+      version: 1,
+      deletedAt: null,
       lastUpdated: Date.now(),
       isPinned: 0,
     }
