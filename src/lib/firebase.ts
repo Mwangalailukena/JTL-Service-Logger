@@ -17,17 +17,23 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+// Safety check for build time
+const isConfigValid = !!firebaseConfig.apiKey;
+
 // Initialize Firebase (Singleton pattern)
-const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const app = getApps().length > 0 
+  ? getApp() 
+  : (isConfigValid ? initializeApp(firebaseConfig) : null);
+
+const auth = app ? getAuth(app) : ({} as any);
 
 // Initialize Firestore with modern persistence settings
-const db = initializeFirestore(app, {
+const db = app ? initializeFirestore(app, {
   localCache: persistentLocalCache({
     tabManager: persistentMultipleTabManager()
   })
-});
+}) : ({} as any);
 
-const storage = getStorage(app);
+const storage = app ? getStorage(app) : ({} as any);
 
 export { app, auth, db, storage };
