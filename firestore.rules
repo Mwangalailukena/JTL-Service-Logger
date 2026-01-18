@@ -1,0 +1,37 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: Is the user signed in?
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // 1. USERS: Users can manage their own profile
+    match /users/{userId} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+      allow read: if isSignedIn(); 
+    }
+
+    // 2. CLIENTS: All staff can read/write clients during dev
+    match /clients/{clientId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // 3. SERVICE LOGS: All staff can read/write logs during dev
+    match /serviceLogs/{logId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // 4. KNOWLEDGE BASE: All staff can read/write articles during dev
+    match /knowledge_base/{articleId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // 5. ATTACHMENTS
+    match /attachments/{attachmentId} {
+      allow read, write: if isSignedIn();
+    }
+  }
+}

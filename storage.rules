@@ -1,0 +1,59 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // --- Functions ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    function isPDF() {
+      return request.resource.contentType.matches('application/pdf');
+    }
+
+    function isValidSize(maxSizeMB) {
+      return request.resource.size < maxSizeMB * 1024 * 1024;
+    }
+
+    // --- Service Report Photos ---
+    // Path structure: service_logs/{year}/{month}/{logId}/{fileName}
+    // We simplify to service_logs/** for this prototype
+    match /service_logs/{allPaths=**} {
+      allow read: if isSignedIn();
+      
+      // Upload Rules:
+      // 1. Auth required
+      // 2. Must be an image
+      // 3. Max size 5MB
+      allow write: if isSignedIn()
+                   && isImage()
+                   && isValidSize(5);
+    }
+
+    // --- Knowledge Base Attachments ---
+    // Path structure: kb/{fileName}
+    match /kb/{allPaths=**} {
+      allow read: if isSignedIn();
+      
+      // Only Admins should upload manuals generally, 
+      // but strictly enforcing role here requires Custom Claims.
+      // We allow auth users for now but restrict to PDF/Images
+      allow write: if isSignedIn()
+                   && (isImage() || isPDF())
+                   && isValidSize(20); // Larger limit for manuals
+    }
+
+    // --- User Avatars ---
+    match /users/{userId}/{fileName} {
+      allow read: if isSignedIn();
+      allow write: if request.auth.uid == userId
+                   && isImage()
+                   && isValidSize(2);
+    }
+  }
+}

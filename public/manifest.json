@@ -1,0 +1,19 @@
+{
+  "name": "Jeotronix Technologies",
+  "short_name": "Jeotronix",
+  "description": "Service Logging and Knowledge Base for Jeotronix Technologies Limited",
+  "id": "jeotronix-pwa-v1",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

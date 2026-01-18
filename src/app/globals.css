@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  /* --- Professional Enterprise Palette --- */
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+  --color-brand-900: #1e3a8a;
+
+  --color-surface-50: #f8fafc;
+  --color-surface-100: #f1f5f9;
+  --color-surface-200: #e2e8f0;
+  --color-surface-300: #cbd5e1;
+  --color-surface-400: #94a3b8;
+  --color-surface-500: #64748b;
+  --color-surface-900: #0f172a;
+
+  /* Status Colors */
+  --color-success-50: #f0fdf4;
+  --color-success-600: #16a34a;
+  --color-warning-50: #fffbeb;
+  --color-warning-600: #d97706;
+  --color-danger-50: #fef2f2;
+  --color-danger-600: #dc2626;
+
+  /* --- Precise Border Radii --- */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* --- Elevation Shadows (Material Style) --- */
+  --shadow-subtle: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-elevation: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-floating: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* --- Typography Config --- */
+  --font-sans: "Inter", "system-ui", "-apple-system", "sans-serif";
+  
+  /* Overrides for standard Tailwind names to match our system */
+  --color-background: var(--color-surface-50);
+  --color-foreground: var(--color-surface-900);
+  --color-primary: var(--color-brand-600);
+  --color-border: var(--color-surface-200);
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-brand-100;
+  }
+  
+  /* Standardized scrollbar for high-density UI */
+  ::-webkit-scrollbar {
+    @apply w-1.5 h-1.5;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface-200 rounded-full hover:bg-surface-300 transition-colors;
+  }
+}
+
+@layer components {
+  /* Metadata labels (High density) */
+  .metadata-label {
+    @apply text-[10px] font-black uppercase tracking-widest text-surface-500 leading-none;
+  }
+
+  /* Card Base (MUI style) */
+  .card-base {
+    @apply bg-white border border-surface-200 rounded-lg shadow-subtle hover:shadow-elevation transition-all duration-200;
+  }
+
+  /* Dense Input */
+  .input-dense {
+    @apply h-9 px-3 text-xs font-medium bg-surface-50 border border-surface-200 rounded-md outline-none focus:bg-white focus:border-brand-500 transition-all;
+  }
+}
