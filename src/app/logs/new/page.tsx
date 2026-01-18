@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DashboardLayout from "@/components/layout/dashboard-layout";
@@ -21,8 +21,9 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function NewServiceLogPage() {
+function NewServiceLogPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { clients } = useClients();
   const { addLog } = useServiceLogs();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,10 +32,10 @@ export default function NewServiceLogPage() {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<ServiceLogFormValues>({
-    resolver: zodResolver(serviceLogSchema),
-    defaultStatus: "draft",
+    resolver: zodResolver(serviceLogSchema) as any,
     defaultValues: {
       status: "draft",
       jobType: "ict",
@@ -43,6 +44,14 @@ export default function NewServiceLogPage() {
 
   const jobType = watch("jobType");
   const status = watch("status");
+
+  // Pre-fill clientId from URL if present
+  useEffect(() => {
+    const clientId = searchParams.get("clientId");
+    if (clientId) {
+      setValue("clientId", clientId);
+    }
+  }, [searchParams, setValue]);
 
   const onSubmit = async (data: ServiceLogFormValues) => {
     setIsSubmitting(true);
@@ -264,5 +273,19 @@ export default function NewServiceLogPage() {
         </form>
       </div>
     </DashboardLayout>
+  );
+}
+
+export default function NewServiceLogPage() {
+  return (
+    <Suspense fallback={
+      <DashboardLayout>
+        <div className="flex h-screen items-center justify-center bg-slate-50">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+        </div>
+      </DashboardLayout>
+    }>
+      <NewServiceLogPageContent />
+    </Suspense>
   );
 }

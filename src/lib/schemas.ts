@@ -5,7 +5,7 @@ export const serviceLogSchema = z.object({
   serviceDate: z.string().min(1, "Date is required"),
   durationMinutes: z.coerce.number().min(5, "Minimum 5 minutes").max(1440, "Maximum 24 hours"),
   description: z.string().min(10, "Description must be at least 10 characters"),
-  status: z.enum(["draft", "completed"]),
+  status: z.enum(["draft", "completed", "pending", "cancelled"]),
   jobType: z.enum(["ict", "solar"]),
   
   // ICT Specific

@@ -2,7 +2,7 @@
 
 import DashboardLayout from "@/components/layout/dashboard-layout";
 import { useKnowledgeBase } from "@/hooks/use-knowledge-base";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { 
   Search, 
@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function KnowledgeBasePage() {
+function KnowledgeBasePageContent() {
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const [category, setCategory] = useState("all");
@@ -276,5 +276,19 @@ function AttachmentList({ articleId, getAttachments, downloadAttachment, getAtta
         </div>
       ))}
     </div>
+  );
+}
+
+export default function KnowledgeBasePage() {
+  return (
+    <Suspense fallback={
+      <DashboardLayout>
+        <div className="flex h-screen items-center justify-center bg-slate-50">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+        </div>
+      </DashboardLayout>
+    }>
+      <KnowledgeBasePageContent />
+    </Suspense>
   );
 }

@@ -23,7 +23,7 @@ import {
   Search,
   Globe
 } from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
@@ -40,7 +40,7 @@ import {
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function ClientsPage() {
+function ClientsPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { clients, addClient, updateClient, deleteClient } = useClients();
@@ -450,5 +450,19 @@ export default function ClientsPage() {
         </form>
       </Modal>
     </DashboardLayout>
+  );
+}
+
+export default function ClientsPage() {
+  return (
+    <Suspense fallback={
+      <DashboardLayout>
+        <div className="flex h-screen items-center justify-center bg-slate-50">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+        </div>
+      </DashboardLayout>
+    }>
+      <ClientsPageContent />
+    </Suspense>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import DashboardLayout from "@/components/layout/dashboard-layout";
 import { useServiceLogsFiltered, useServiceLogs } from "@/hooks/use-service-logs";
@@ -43,7 +43,7 @@ import { Button } from "@/components/ui/button";
 
 const ITEMS_PER_PAGE = 15;
 
-export default function ServiceHistoryPage() {
+function ServiceHistoryPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { syncNow, isSyncing } = useSync();
@@ -534,5 +534,19 @@ export default function ServiceHistoryPage() {
         )}
       </div>
     </DashboardLayout>
+  );
+}
+
+export default function ServiceHistoryPage() {
+  return (
+    <Suspense fallback={
+      <DashboardLayout>
+        <div className="flex h-screen items-center justify-center bg-slate-50">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+        </div>
+      </DashboardLayout>
+    }>
+      <ServiceHistoryPageContent />
+    </Suspense>
   );
 }
