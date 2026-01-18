@@ -30,6 +30,7 @@ export default function EditServiceLogPage() {
   const { clients } = useClients();
   const { updateLog } = useServiceLogs();
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentLocalId, setCurrentLocalId] = useState<number | string | null>(null);
 
   const {
@@ -39,7 +40,7 @@ export default function EditServiceLogPage() {
     reset,
     formState: { errors },
   } = useForm<ServiceLogFormValues>({
-    resolver: zodResolver(serviceLogSchema),
+    resolver: zodResolver(serviceLogSchema) as any,
   });
 
   const jobType = watch("jobType");
