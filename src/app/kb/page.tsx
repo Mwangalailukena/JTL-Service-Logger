@@ -17,18 +17,22 @@ import {
   Monitor, 
   Tag,
   ArrowUpRight,
-  Info
+  Info,
+  X
 } from "lucide-react";
 import { LocalAttachment } from "@/lib/db";
 import { seedKB } from "@/lib/seed-kb";
 import { cn } from "@/lib/utils";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { MarkdownViewer } from "@/components/ui/markdown-editor";
 
 function KnowledgeBasePageContent() {
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const [category, setCategory] = useState("all");
+  const [readingArticle, setReadingArticle] = useState<any | null>(null);
 
   useEffect(() => {
     const q = searchParams.get("q");
@@ -151,7 +155,8 @@ function KnowledgeBasePageContent() {
                 articles.map((article) => (
                   <article 
                     key={article.id} 
-                    className="bg-white p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all flex flex-col group relative"
+                    onClick={() => setReadingArticle(article)}
+                    className="bg-white p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all flex flex-col group relative cursor-pointer"
                   >
                   <div className="flex items-start justify-between mb-4">
                     <span className={cn(
@@ -181,7 +186,7 @@ function KnowledgeBasePageContent() {
                   </h3>
                   
                   <div className="text-slate-500 text-sm mb-6 line-clamp-3 flex-1 font-medium leading-relaxed">
-                    {article.content.substring(0, 150)}...
+                    {article.content.replace(/[#*`]/g, '').substring(0, 150)}...
                   </div>
 
                   <AttachmentList 
@@ -226,6 +231,53 @@ function KnowledgeBasePageContent() {
             </div>
           </div>
         </div>
+
+        {/* Reading Drawer */}
+        {readingArticle && (
+          <>
+            <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40" onClick={() => setReadingArticle(null)}></div>
+            <aside className="fixed top-0 right-0 h-screen w-full max-w-3xl bg-white shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
+              <header className="p-6 border-b flex items-center justify-between bg-white sticky top-0 z-10">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                    <BookOpen size={24} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-black text-slate-900 tracking-tight">{readingArticle.title}</h2>
+                    <div className="flex items-center gap-3 mt-1">
+                       <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 px-2 py-0.5 bg-blue-50 rounded border border-blue-100">
+                         {readingArticle.category}
+                       </span>
+                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                         Last Updated: {new Date(readingArticle.lastUpdated).toLocaleDateString()}
+                       </span>
+                    </div>
+                  </div>
+                </div>
+                <button onClick={() => setReadingArticle(null)} className="p-2 rounded-xl hover:bg-slate-100 transition-colors">
+                  <X size={24} className="text-slate-400" />
+                </button>
+              </header>
+
+              <div className="flex-1 overflow-y-auto p-8 bg-slate-50/30">
+                <div className="bg-white rounded-3xl border shadow-sm p-8 min-h-full">
+                  <MarkdownViewer value={readingArticle.content} />
+                </div>
+              </div>
+
+              <footer className="p-6 border-t bg-white flex justify-between items-center">
+                <div className="flex gap-2">
+                  {readingArticle.tags.map((tag: string) => (
+                    <span key={tag} className="px-2 py-1 rounded bg-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-tighter">#{tag}</span>
+                  ))}
+                </div>
+                <Button className="font-black bg-slate-900" onClick={() => window.print()}>
+                  Print Protocol
+                </Button>
+              </footer>
+            </aside>
+          </>
+        )}
       </div>
     </DashboardLayout>
   );

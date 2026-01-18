@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DashboardLayout from "@/components/layout/dashboard-layout";
 import { serviceLogSchema, ServiceLogFormValues } from "@/lib/schemas";
@@ -10,6 +10,7 @@ import { useClients } from "@/hooks/use-clients";
 import { useServiceLogs } from "@/hooks/use-service-logs";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MarkdownEditor } from "@/components/ui/markdown-editor";
 import { 
   Save, 
   X, 
@@ -33,6 +34,7 @@ function NewServiceLogPageContent() {
     handleSubmit,
     watch,
     setValue,
+    control,
     formState: { errors },
   } = useForm<ServiceLogFormValues>({
     resolver: zodResolver(serviceLogSchema) as any,
@@ -180,13 +182,19 @@ function NewServiceLogPageContent() {
               <div className="p-6">
                 <div className="space-y-2">
                   <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Executive Summary</label>
-                  <textarea
-                    {...register("description")}
-                    rows={4}
-                    placeholder="Provide a detailed overview of the intervention, hardware changes, and final status..."
-                    className={cn(
-                      "w-full p-4 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500/10 focus:bg-white transition-all font-medium text-slate-700",
-                      errors.description ? "border-red-300" : "border-slate-200"
+                  <Controller
+                    name="description"
+                    control={control}
+                    render={({ field }) => (
+                      <MarkdownEditor
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Provide a detailed overview of the intervention, hardware changes, and final status using Markdown..."
+                        className={cn(
+                          "w-full rounded-xl overflow-hidden border",
+                          errors.description ? "border-red-300" : "border-slate-200"
+                        )}
+                      />
                     )}
                   />
                   {errors.description && <p className="text-[10px] font-bold text-red-500 uppercase tracking-tighter">{errors.description.message}</p>}

@@ -50,6 +50,7 @@ import { cn } from "@/lib/utils";
 import { useSync } from "@/providers/sync-provider";
 import { LocalServiceLog } from "@/lib/db";
 import { Button } from "@/components/ui/button";
+import { MarkdownViewer } from "@/components/ui/markdown-editor";
 
 export default function Home() {
   const { logs, deleteLog } = useServiceLogs();
@@ -496,10 +497,11 @@ export default function Home() {
 
                 <section className="space-y-3">
                   <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Technical Brief</h3>
-                  <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 min-h-[120px]">
-                    <p className="text-sm font-medium text-slate-700 leading-relaxed whitespace-pre-wrap">
-                      {inspectedLog.description}
-                    </p>
+                  <div className="rounded-2xl bg-slate-50 border border-slate-100 min-h-[120px] overflow-hidden">
+                    <MarkdownViewer 
+                      value={inspectedLog.description} 
+                      className="text-sm font-medium text-slate-700 leading-relaxed"
+                    />
                   </div>
                 </section>
 
